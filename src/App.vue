@@ -21,8 +21,18 @@ const stockData = ref({
   volume: '1.2M'
 })
 
-// Chart data
-const chartData = ref({
+// Chart data with proper typing
+interface ChartData {
+  labels: string[]
+  datasets: {
+    label: string
+    data: number[]
+    borderColor: string
+    backgroundColor: string
+  }[]
+}
+
+const chartData = ref<ChartData>({
   labels: [],
   datasets: [{
     label: 'RSI',
@@ -31,10 +41,6 @@ const chartData = ref({
     backgroundColor: 'rgba(44, 62, 80, 0.1)',
   }]
 })
-
-const formatDate = (date: string) => {
-  return new Date(date).toISOString().split('T')[0]
-}
 
 const calculateRSI = (prices: number[]) => {
   const periods = 14
@@ -94,7 +100,7 @@ const handleAnalyze = async () => {
       }
     }
 
-    // Update chart data
+    // Update chart data with proper typing
     chartData.value = {
       labels: labels.slice(14),
       datasets: [{
