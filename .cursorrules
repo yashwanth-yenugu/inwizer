@@ -1,0 +1,68 @@
+# Project: ICICI Direct Algo Trading App - User calls it Inwizer
+
+**Tech Stack**: 
+- Vue 3 + TypeScript 
+- BreezeConnect 
+- Chart.js 
+- Cloudflare Pages
+
+**Future Plans**:
+- Cloudflare Workers integration
+- Real-time trading signals
+- Backtesting engine
+
+## Core Architecture
+- **Framework**: Vue 3 Composition API + TypeScript
+- **State Management**: Native Ref/Reactive only
+- **Styling**: Scoped CSS with mobile-first approach
+- **Charting**: Chart.js + vue-chartjs wrapper
+- **API**: BreezeConnect SDK integration
+
+## Code Standards
+### Components
+- Use `<script setup>` with TypeScript
+- Type all props/emits
+- Max 400 lines per component
+- Composition functions for business logic
+
+### TypeScript
+- Strict mode enabled
+- Prefer `interface` over `type`
+- No `any` types
+- Full BreezeConnect typings
+
+### API Integration
+- Env vars: `VITE_BREEZE_*`
+- Encrypt localStorage sessions
+- Rate limit: 30 req/min
+- Error handling wrappers
+
+### Data Visualization
+- Mobile-first responsive charts
+- Color scheme:
+  - Primary: `#2c3e50`
+  - Sell: `#e74c3c`
+  - Buy: `#27ae60`
+- ARIA labels required
+
+## Deployment
+- **Target**: Cloudflare Pages
+- **Env Handling**: `import.meta.env`
+- **Serverless**: Use `/functions` directory
+- **Caching**: Cache-first for static assets
+
+## Workflow
+- Update rules on major changes
+- JSDoc documentation required
+- TODO comments with issue numbers
+- Functional programming preferred
+
+## Brain.md Rules
+1. **Mandatory Review**: Read before any changes
+2. **Strict Updates**: Update after every task
+3. **Required Sections**:
+   - Lessons Learned
+   - Anti-Patterns
+   - Known Issues
+4. **Location**: `/brain.md`
+5. **Validation**: PRs require relevant updates

@@ -2,15 +2,19 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import RSIChart from './components/RSIChart.vue'
+import BreezeLogin from './components/BreezeLogin.vue'
+import { breezeService } from './services/breezeService'
 
 const currentYear = computed(() => new Date().getFullYear())
+
+const isLoggedIn = ref(false)
+const showResults = ref(false)
 
 // Form data
 const stockSymbol = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const isLoading = ref(false)
-const showResults = ref(false)
 
 // Stock data
 const stockData = ref({
@@ -122,89 +126,100 @@ const handleAnalyze = async () => {
     isLoading.value = false
   }
 }
+
+const handleLoginSuccess = () => {
+  isLoggedIn.value = true
+}
 </script>
 
 <template>
   <div class="app">
     <header>
-      <h1>InWizer Stock Analysis</h1>
+      <h1>Algo Trading Dashboard</h1>
     </header>
 
     <main class="content">
-      <section class="input-section">
-        <h2>Stock Analysis Tool</h2>
-        <form @submit.prevent="handleAnalyze" class="analysis-form">
-          <div class="form-group">
-            <label for="stock">Stock Symbol</label>
-            <input 
-              id="stock"
-              v-model="stockSymbol"
-              type="text"
-              placeholder="e.g., AAPL"
-              required
-            >
-          </div>
+      <BreezeLogin 
+        v-if="!isLoggedIn" 
+        @login-success="handleLoginSuccess" 
+      />
 
-          <div class="form-group">
-            <label for="startDate">Start Date</label>
-            <input 
-              id="startDate"
-              v-model="startDate"
-              type="date"
-              required
-            >
-          </div>
+      <div v-else>
+        <section class="input-section">
+          <h2>Stock Analysis Tool</h2>
+          <form @submit.prevent="handleAnalyze" class="analysis-form">
+            <div class="form-group">
+              <label for="stock">Stock Symbol</label>
+              <input 
+                id="stock"
+                v-model="stockSymbol"
+                type="text"
+                placeholder="e.g., AAPL"
+                required
+              >
+            </div>
 
-          <div class="form-group">
-            <label for="endDate">End Date</label>
-            <input 
-              id="endDate"
-              v-model="endDate"
-              type="date"
-              required
-            >
-          </div>
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input 
+                id="startDate"
+                v-model="startDate"
+                type="date"
+                required
+              >
+            </div>
 
-          <button type="submit" :disabled="isLoading">
-            {{ isLoading ? 'Analyzing...' : 'Analyze Stock' }}
-          </button>
-        </form>
-      </section>
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input 
+                id="endDate"
+                v-model="endDate"
+                type="date"
+                required
+              >
+            </div>
 
-      <section v-if="showResults" class="results-section">
-        <h3>Analysis Results for {{ stockSymbol }}</h3>
-        <div class="chart-section">
-          <RSIChart :chart-data="chartData" />
-        </div>
-        <div class="indicators-grid">
-          <div class="indicator-card">
-            <h4>RSI</h4>
-            <p :class="{ 'overbought': stockData.rsi > 70, 'oversold': stockData.rsi < 30 }">
-              {{ stockData.rsi }}
-            </p>
+            <button type="submit" :disabled="isLoading">
+              {{ isLoading ? 'Analyzing...' : 'Analyze Stock' }}
+            </button>
+          </form>
+        </section>
+
+        <section v-if="showResults" class="results-section">
+          <h3>Analysis Results for {{ stockSymbol }}</h3>
+          <div class="chart-section">
+            <RSIChart :chart-data="chartData" />
           </div>
-          <div class="indicator-card">
-            <h4>20-Day SMA</h4>
-            <p>${{ stockData.sma20 }}</p>
+          <div class="indicators-grid">
+            <div class="indicator-card">
+              <h4>RSI</h4>
+              <p :class="{ 'overbought': stockData.rsi > 70, 'oversold': stockData.rsi < 30 }">
+                {{ stockData.rsi }}
+              </p>
+            </div>
+            <div class="indicator-card">
+              <h4>20-Day SMA</h4>
+              <p>${{ stockData.sma20 }}</p>
+            </div>
+            <div class="indicator-card">
+              <h4>50-Day EMA</h4>
+              <p>${{ stockData.ema50 }}</p>
+            </div>
+            <div class="indicator-card">
+              <h4>MACD</h4>
+              <p>{{ stockData.macd }}</p>
+            </div>
+            <div class="indicator-card">
+              <h4>Volume</h4>
+              <p>{{ stockData.volume }}</p>
+            </div>
           </div>
-          <div class="indicator-card">
-            <h4>50-Day EMA</h4>
-            <p>${{ stockData.ema50 }}</p>
-          </div>
-          <div class="indicator-card">
-            <h4>MACD</h4>
-            <p>{{ stockData.macd }}</p>
-          </div>
-          <div class="indicator-card">
-            <h4>Volume</h4>
-            <p>{{ stockData.volume }}</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
 
     <footer>
-      <p>&copy; {{ currentYear }} InWizer. All rights reserved.</p>
+      <p>&copy; {{ currentYear }} Algo Trading App</p>
     </footer>
   </div>
 </template>
