@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.6.7",
+    "breezeconnect": "^1.0.29",
     "chart.js": "^4.4.1",
     "vue": "^3.5.13",
     "vue-chartjs": "^5.3.2"
