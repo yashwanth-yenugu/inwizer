@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import RSIChart from './components/RSIChart.vue'
 import BreezeLogin from './components/BreezeLogin.vue'
-import { breezeService } from './services/breezeService'
 
 const currentYear = computed(() => new Date().getFullYear())
 
